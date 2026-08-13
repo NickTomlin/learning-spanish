@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spanish learning bits and bobs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4ede0;
+    --bg-card: #fbf8f1;
+    --bg-soft: #ece3d2;
+    --ink: #2a1f15;
+    --ink-soft: #6b5d4d;
+    --ink-faint: #9b8f7e;
+    --rule: #d9cfbd;
+    --rule-soft: #e5dccb;
+    --accent: #9c2a2a;
+    --accent-soft: #c47a7a;
+    --accent-bg: #f3d9d9;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(156, 42, 42, 0.04), transparent 40%),
+      radial-gradient(circle at 80% 90%, rgba(120, 90, 40, 0.05), transparent 50%);
+    min-height: 100vh;
+  }
+  .wrap {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 48px 32px 96px;
+  }
+  header { margin-bottom: 40px; }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-variation-settings: 'opsz' 144, 'SOFT' 50;
+    font-size: clamp(56px, 9vw, 96px);
+    line-height: 1;
+    margin: 0;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  h1 .accent { color: var(--accent); font-style: italic; font-weight: 500; }
+  .sub {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--ink-soft);
+    margin: 8px 0 0;
+  }
+  .cards {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    display: block;
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 24px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .card:hover {
+    border-color: var(--accent-soft);
+    transform: translateY(-2px);
+  }
+  .card h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 24px;
+    margin: 0 0 6px;
+    color: var(--ink);
+  }
+  .card p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .card .arrow {
+    display: inline-block;
+    margin-top: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Espa<span class="accent">ñ</span>ol</h1>
+    <p class="sub">Spanish learning bits and bobs</p>
+  </header>
+
+  <nav class="cards">
+    <a class="card" href="preterite.html">
+      <h2>Pretérito</h2>
+      <p>Conjugation reference and drills for the Spanish preterite tense.</p>
+      <span class="arrow">study &rarr;</span>
+    </a>
+    <a class="card" href="imperfect.html">
+      <h2>Imperfecto</h2>
+      <p>Conjugation reference and drills for the Spanish imperfect tense.</p>
+      <span class="arrow">study &rarr;</span>
+    </a>
+    <a class="card" href="worksheet.html">
+      <h2>Worksheets</h2>
+      <p>Build a printable exercise sheet from any tense, with an answer key.</p>
+      <span class="arrow">print &rarr;</span>
+    </a>
+  </nav>
+</div>
+</body>
+</html>

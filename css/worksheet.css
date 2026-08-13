@@ -1,0 +1,335 @@
+/* Printable worksheet: on-screen it previews as paper, on paper it's ink-cheap. */
+
+.ws-shell { max-width: 1000px; margin: 0 auto; padding: 32px 24px 80px; }
+
+/* === Controls (screen only) === */
+.ws-controls {
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 32px;
+}
+.ws-controls-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.ws-controls-head h1 {
+  font-size: 30px;
+  font-family: var(--serif);
+  font-weight: 600;
+  margin: 0;
+}
+.ws-controls-head .sub { margin: 2px 0 0; font-size: 15px; }
+
+/* Which sheet to print is just another control, so it sits with the rest. */
+.ws-sheet-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.ws-sheet-tab {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  text-decoration: none;
+  padding: 7px 16px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--bg);
+  transition: all 0.15s;
+}
+.ws-sheet-tab:hover { color: var(--ink); border-color: var(--ink-faint); }
+.ws-sheet-tab.active {
+  color: var(--bg);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.ws-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 24px;
+  align-items: flex-end;
+}
+.ws-field { display: flex; flex-direction: column; gap: 5px; }
+.ws-field > label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  font-weight: 500;
+}
+.ws-field select,
+.ws-field input[type='number'],
+.ws-field input[type='text'] {
+  font: inherit;
+  font-size: 14px;
+  padding: 7px 10px;
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  color: var(--ink);
+  outline: none;
+}
+.ws-field select:focus,
+.ws-field input:focus { border-color: var(--accent); }
+.ws-field input[type='number'] { width: 84px; }
+.ws-field .seed-row { display: flex; gap: 6px; }
+.ws-field .seed-row input { width: 110px; font-family: var(--mono); }
+
+.ws-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  padding-bottom: 7px;
+}
+.ws-check input { accent-color: var(--accent); }
+
+.btn {
+  appearance: none;
+  border: 1px solid var(--rule);
+  background: var(--bg-card);
+  color: var(--ink);
+  border-radius: 6px;
+  padding: 7px 14px;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn:hover { border-color: var(--ink-faint); background: var(--bg-soft); }
+.btn.primary { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.btn.primary:hover { opacity: 0.85; background: var(--ink); }
+
+.ws-cats { margin-top: 18px; }
+.ws-cats summary {
+  font-size: 13px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  user-select: none;
+}
+.ws-cats summary:hover { color: var(--ink); }
+.ws-cat-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule-soft);
+}
+.ws-cat-list label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.ws-cat-list input { accent-color: var(--accent); }
+.ws-cat-actions { display: flex; gap: 8px; margin-top: 12px; }
+
+.ws-hint {
+  margin-top: 16px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+
+/* === The paper === */
+.paper {
+  background: #fff;
+  color: #14100c;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(42, 31, 21, 0.08);
+  padding: 0.6in;
+  margin-bottom: 28px;
+  max-width: 8.5in;
+  margin-inline: auto;
+}
+
+.paper-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  border-bottom: 2px solid #14100c;
+  padding-bottom: 8px;
+  margin-bottom: 6px;
+}
+.paper-title { font-family: var(--serif); font-size: 26px; font-weight: 600; margin: 0; line-height: 1.1; }
+.paper-kicker {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #6b5d4d;
+  margin: 0 0 2px;
+}
+.name-date {
+  display: flex;
+  gap: 18px;
+  font-size: 11px;
+  color: #6b5d4d;
+  white-space: nowrap;
+}
+.name-date span { display: inline-block; border-bottom: 1px solid #b9ad9b; min-width: 130px; }
+.name-date .short { min-width: 70px; }
+
+.paper-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 11px;
+  color: #6b5d4d;
+  margin-bottom: 20px;
+}
+.paper-instructions { font-style: italic; font-family: var(--serif); font-size: 13px; }
+.paper-stamp { font-family: var(--mono); font-size: 10px; white-space: nowrap; }
+
+/* Fill-in-the-blank exercises */
+.blanks {
+  column-count: 2;
+  column-gap: 0.5in;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.blanks.single-col { column-count: 1; }
+.blank-item {
+  break-inside: avoid;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 7px 0;
+  font-size: 13px;
+}
+.blank-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #8a7d6b;
+  min-width: 20px;
+  text-align: right;
+  flex: none;
+}
+.blank-prompt { flex: none; }
+.blank-term { font-family: var(--serif); font-style: italic; font-weight: 600; font-size: 15px; }
+.blank-axis { font-family: var(--mono); font-size: 11px; color: #6b5d4d; }
+.blank-gloss { font-size: 10px; color: #8a7d6b; }
+.blank-line { flex: 1; border-bottom: 1px solid #b9ad9b; min-width: 1in; height: 1.1em; }
+
+/* Whole-table exercises */
+.grids { display: grid; grid-template-columns: 1fr 1fr; gap: 0.35in 0.5in; }
+.grids.single-col { grid-template-columns: 1fr; }
+.grid-item { break-inside: avoid; }
+.grid-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.grid-num { font-family: var(--mono); font-size: 11px; color: #8a7d6b; }
+.grid-term { font-family: var(--serif); font-style: italic; font-weight: 600; font-size: 15px; }
+.grid-gloss { font-size: 10px; color: #8a7d6b; }
+/* Separate borders so each cell reads as its own blank, not one long rule. */
+.grid-table { width: 100%; border-collapse: separate; border-spacing: 5px 0; margin-left: -5px; }
+.grid-table th {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 400;
+  color: #6b5d4d;
+  text-align: left;
+  padding: 0 2px 1px;
+  white-space: nowrap;
+}
+.grid-table td {
+  border-bottom: 1px solid #b9ad9b;
+  height: 1.4em;
+  padding: 0 2px;
+}
+
+/* Answer key */
+.key-list {
+  column-count: 3;
+  column-gap: 0.4in;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+}
+.key-item {
+  break-inside: avoid;
+  display: flex;
+  gap: 6px;
+  padding: 3px 0;
+  align-items: baseline;
+}
+.key-num { font-family: var(--mono); font-size: 10px; color: #8a7d6b; min-width: 18px; text-align: right; flex: none; }
+.key-answer { font-family: var(--mono); font-weight: 500; }
+.key-term { font-size: 10px; color: #8a7d6b; }
+.key-group { break-inside: avoid; margin-bottom: 10px; }
+.key-group-title { font-family: var(--serif); font-style: italic; font-size: 12px; margin: 0 0 2px; }
+.key-group-forms { font-family: var(--mono); font-size: 11px; }
+
+.paper-foot {
+  margin-top: 22px;
+  padding-top: 8px;
+  border-top: 1px solid #d9cfbd;
+  font-size: 10px;
+  color: #8a7d6b;
+  display: flex;
+  justify-content: space-between;
+}
+
+.ws-error {
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-soft);
+  color: var(--accent);
+  border-radius: 8px;
+  padding: 20px 24px;
+}
+.ws-error a { color: var(--accent); }
+
+/* === Print === */
+@page {
+  size: letter;
+  margin: 0.55in;
+}
+
+@media print {
+  body {
+    background: #fff !important;
+    background-image: none !important;
+  }
+  .no-print { display: none !important; }
+  .ws-shell { max-width: none; padding: 0; }
+  .paper {
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    max-width: none;
+    break-after: page;
+  }
+  .paper:last-child { break-after: auto; }
+  .blank-line, .grid-table td, .name-date span { border-bottom-color: #999; }
+}
+
+@media (max-width: 700px) {
+  .blanks { column-count: 1; }
+  .grids { grid-template-columns: 1fr; }
+  .key-list { column-count: 2; }
+  .paper { padding: 24px; }
+}
