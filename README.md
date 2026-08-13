@@ -1,11 +1,10 @@
 Spanish learning bits and bobs
+===
 
-A static site — no build step, no dependencies. Because it uses ES modules, it
-must be served over HTTP rather than opened as a `file://` URL:
+Utilities for helping me practice spanish.
 
-```
-./serve.sh          # http://localhost:8000
-```
+Deployed at: https://espanol-ntomlin.netlify.app/
+
 
 ## Quiz sheets
 
@@ -102,3 +101,9 @@ and its worksheet link points at `?sheet=preterite&cats=j-stem`.
 Blanks are dealt round-robin across items, so every item is asked once before
 any repeats, and items used by a table exercise are kept out of the blanks —
 the sheet never gives away an answer it also asks for.
+
+# Local Development
+
+```
+./serve.sh          # http://localhost:8000
+```
