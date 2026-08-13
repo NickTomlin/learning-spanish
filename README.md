@@ -69,9 +69,9 @@ it prints is a URL option like any other, so the nav carries a single
    `normalizeSheet` throws on a mismatched `forms` length or an unknown
    `category`, so typos surface immediately instead of half-rendering.
 
-2. **Register it** in `sheets/index.js`, with the title the worksheet picker
-   should show. That alone makes `worksheet.html?sheet=<id>` work and adds the
-   sheet to the worksheet page's tabs — no new worksheet page needed.
+2. **Register it** in `sheets/index.js` — one import and one entry. That alone
+   makes `worksheet.html?sheet=<id>` work and adds the sheet to the worksheet
+   page's tabs; no new worksheet page needed.
 
 3. **Add the study page** — copy `preterite.html` and change the import. That
    shell is the whole page; everything else comes from the sheet.

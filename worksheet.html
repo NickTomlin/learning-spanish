@@ -13,7 +13,7 @@
 <body>
 <div id="app"></div>
 <script type="module">
-  import { loadSheet, sheetCatalog } from './sheets/index.js';
+  import { getSheet, sheetCatalog } from './sheets/index.js';
   import { mountWorksheetPage } from './lib/worksheet-page.js';
 
   const app = document.getElementById('app');
@@ -23,7 +23,7 @@
   const id = new URL(window.location.href).searchParams.get('sheet') || catalog[0].id;
 
   try {
-    mountWorksheetPage(await loadSheet(id), app, { catalog });
+    mountWorksheetPage(getSheet(id), app, { catalog });
   } catch (err) {
     const links = catalog
       .map((s) => `<a href="?sheet=${encodeURIComponent(s.id)}">${s.title}</a>`)
