@@ -8,25 +8,27 @@ Deployed at: https://espanol-ntomlin.netlify.app/
 
 ## Quiz sheets
 
-Everything drillable is defined as a **sheet**: one data file that feeds both an
-interactive study page and a printable worksheet, so the two can never drift.
+Everything drillable is defined as a **sheet**: one data file that feeds an
+interactive study page and both printable documents — a worksheet of exercises
+and a reference sheet of every form — so none of them can drift apart.
 
 ```
 sheets/preterite.js     the data
 sheets/index.js         registry of every sheet
 lib/sheet.js            schema, validation, question sampling, seeded RNG
 lib/study-page.js       interactive page (reference · quiz · patterns)
-lib/worksheet-page.js   printable worksheet + answer key
+lib/worksheet-page.js   printable worksheet + answer key, and reference sheet
 css/theme.css           shared tokens
 css/study.css           interactive styles
 css/worksheet.css       paper + print styles
 preterite.html          shell: imports a sheet, mounts the study page
-worksheet.html          the one worksheet page — every sheet, every config
+worksheet.html          the one printable page — every sheet, every config
 ```
 
-There is a study page per sheet, but only **one** worksheet page. Which sheet
-it prints is a URL option like any other, so the nav carries a single
-`Worksheets` entry and quiz sections deep-link into a configuration of it.
+There is a study page per sheet, but only **one** printable page. Which sheet
+it prints — and whether it prints a worksheet or a reference sheet — are URL
+options like any other, so the nav carries a single `Printables` entry and
+study pages deep-link into a configuration of it.
 
 ### Adding a sheet
 
@@ -41,6 +43,7 @@ it prints is a URL option like any other, so the nav carries a single
      inputPlaceholder: 'article…',
      searchPlaceholder: 'Search nouns…',
      worksheetInstructions: 'Write the definite and indefinite article.',
+     referenceInstructions: 'Every noun, grouped by gender.',
 
      // The forms every item inflects across. `shortValues` is used where
      // space is tight (the printed worksheet); it defaults to `values`.
@@ -69,8 +72,9 @@ it prints is a URL option like any other, so the nav carries a single
    `category`, so typos surface immediately instead of half-rendering.
 
 2. **Register it** in `sheets/index.js` — one import and one entry. That alone
-   makes `worksheet.html?sheet=<id>` work and adds the sheet to the worksheet
-   page's tabs; no new worksheet page needed.
+   makes `worksheet.html?sheet=<id>` work, gives you a reference sheet at
+   `&doc=reference`, and adds the sheet to the printable page's tabs; no new
+   page needed.
 
 3. **Add the study page** — copy `preterite.html` and change the import. That
    shell is the whole page; everything else comes from the sheet.
@@ -92,6 +96,7 @@ and its worksheet link points at `?sheet=preterite&cats=j-stem`.
 | Param    | Meaning                                            | Default |
 | -------- | -------------------------------------------------- | ------- |
 | `sheet`  | Sheet id from the registry                          | first   |
+| `doc`    | `worksheet`, or `reference` for the reference sheet | `worksheet` |
 | `blanks` | Numbered fill-in-the-blank prompts                  | `24`    |
 | `tables` | Blank full-conjugation tables                       | `0`     |
 | `cats`   | Comma-separated category ids to draw from           | all     |
@@ -101,6 +106,22 @@ and its worksheet link points at `?sheet=preterite&cats=j-stem`.
 Blanks are dealt round-robin across items, so every item is asked once before
 any repeats, and items used by a table exercise are kept out of the blanks —
 the sheet never gives away an answer it also asks for.
+
+`blanks`, `tables`, `seed`, and `key` describe exercises, so they're ignored —
+and dropped from the URL — when `doc=reference`.
+
+### Reference sheets
+
+`worksheet.html?sheet=<id>&doc=reference` prints the other side of the same
+data: every form, filled in. It leads with the sheet's pattern tables (the
+endings, the stems) and follows them with one table per category, two columns
+to the page, plus each item's notes. Columns a category marks as `highlight`
+are set in bold rather than colour, so the page still reads on a black-and-white
+printer.
+
+The pattern tables always print — they describe the whole tense, not one
+category — while `cats` narrows the conjugation tables under them. Every study
+page links to its reference sheet, carrying the quiz's current categories.
 
 # Local Development
 

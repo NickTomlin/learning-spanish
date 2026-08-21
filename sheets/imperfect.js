@@ -16,6 +16,7 @@ export default {
   inputPlaceholder: 'conjugate…',
   searchPlaceholder: 'Search verbs, meanings, or conjugated forms…',
   worksheetInstructions: 'Write the imperfect form of each verb for the pronoun given.',
+  referenceInstructions: 'Every imperfect form, grouped by pattern.',
 
   axis: {
     label: 'Pronoun',

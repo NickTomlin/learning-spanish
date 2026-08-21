@@ -16,6 +16,7 @@ export default {
   inputPlaceholder: 'conjugate…',
   searchPlaceholder: 'Search verbs, meanings, or conjugated forms…',
   worksheetInstructions: 'Write the preterite form of each verb for the pronoun given.',
+  referenceInstructions: 'Every preterite form, grouped by pattern.',
 
   axis: {
     label: 'Pronoun',
