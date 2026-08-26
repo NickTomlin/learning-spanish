@@ -9,12 +9,21 @@ header.study-header { margin-bottom: 40px; }
   gap: 16px;
 }
 
+/* The two things you can print from a study page, stacked beside the title. */
+.print-links {
+  flex: none;
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
 .print-link {
   flex: none;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-top: 6px;
   padding: 8px 16px;
   border: 1px solid var(--rule);
   border-radius: 999px;
@@ -481,4 +490,5 @@ tbody tr.hidden { display: none; }
   .q-term { font-size: 34px; }
   nav.tabs { overflow-x: auto; }
   .header-top { flex-direction: column; }
+  .print-links { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
 }
