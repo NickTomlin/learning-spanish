@@ -40,7 +40,8 @@ it prints — and whether it prints a worksheet or a reference sheet — are URL
 options like any other, so the nav carries a single `Printables` entry and
 study pages deep-link into a configuration of it. Interactive quizzes can be
 narrowed to specific categories and axis values, such as only `yo`, `él/ella`,
-and `ellos` pronouns; those choices persist separately for each sheet.
+and `ellos` pronouns. The current choices are stored in the `cats` and `axis`
+URL options, making a configured quiz bookmarkable and shareable.
 
 ### Adding a sheet
 
