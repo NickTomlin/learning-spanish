@@ -6,6 +6,16 @@ Utilities for helping me practice spanish.
 Deployed at: https://espanol-ntomlin.netlify.app/
 
 
+## Spanish keyboard
+
+`keyboard.html` is a scratchpad for writing Spanish text, with quick keys for
+accented characters and opening punctuation. Press `Ctrl`/`Cmd` + `Enter`, then
+the corresponding letter, to insert an accent; `2` inserts `ü`, and `?` or `!`
+inserts opening punctuation. The same shortcuts work in quiz answer fields.
+`Ctrl`/`Cmd` + `S` saves a keyboard entry. The page automatically saves the
+current draft and keeps the 15 most recent saved entries in local storage.
+
+
 ## Quiz sheets
 
 Everything drillable is defined as a **sheet**: one data file that feeds an
@@ -28,7 +38,9 @@ worksheet.html          the one printable page — every sheet, every config
 There is a study page per sheet, but only **one** printable page. Which sheet
 it prints — and whether it prints a worksheet or a reference sheet — are URL
 options like any other, so the nav carries a single `Printables` entry and
-study pages deep-link into a configuration of it.
+study pages deep-link into a configuration of it. Interactive quizzes can be
+narrowed to specific categories and axis values, such as only `yo`, `él/ella`,
+and `ellos` pronouns; those choices persist separately for each sheet.
 
 ### Adding a sheet
 

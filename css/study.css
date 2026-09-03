@@ -301,8 +301,18 @@ tbody tr.hidden { display: none; }
 .btn-primary:hover { opacity: 0.85; }
 .btn-primary:disabled { opacity: 0.4; cursor: default; }
 
-.accent-bar { display: flex; gap: 6px; justify-content: center; margin-bottom: 20px; }
+.accent-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 8px;
+}
 .accent-bar button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   appearance: none;
   background: var(--bg-soft);
   border: 1px solid var(--rule);
@@ -317,6 +327,21 @@ tbody tr.hidden { display: none; }
 }
 .accent-bar button:hover { background: var(--highlight); border-color: var(--ink-faint); }
 .accent-bar button:active { transform: scale(0.94); }
+.accent-bar.shortcut-active button { background: var(--highlight); border-color: var(--accent-soft); }
+.accent-key-shortcut {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  color: var(--ink-faint);
+  font: 7px/1 var(--sans);
+}
+.accent-shortcut-hint {
+  margin: 0 0 14px;
+  color: var(--ink-faint);
+  font-size: 10px;
+  line-height: 1.6;
+}
+.accent-shortcut-hint kbd { font: 9px var(--mono); color: var(--ink-soft); }
 
 .feedback { min-height: 56px; padding-top: 8px; }
 .feedback-correct { color: var(--good); font-family: var(--serif); font-style: italic; font-size: 18px; }
@@ -446,9 +471,11 @@ tbody tr.hidden { display: none; }
   background: var(--bg-card);
   border-radius: 10px;
   max-width: 420px;
+  max-height: calc(100vh - 48px);
   width: 100%;
   padding: 28px;
   border: 1px solid var(--rule);
+  overflow-y: auto;
 }
 .modal-title { font-family: var(--serif); font-size: 22px; margin: 0 0 4px; font-weight: 500; }
 .modal-sub {
@@ -458,7 +485,11 @@ tbody tr.hidden { display: none; }
   color: var(--ink-soft);
   margin: 0 0 20px;
 }
-.modal-options { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+.modal-groups { display: flex; flex-direction: column; gap: 24px; margin-bottom: 24px; }
+.modal-group-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.modal-group-head h4 { margin: 0; font-size: 14px; font-weight: 600; }
+.modal-group-actions { display: flex; gap: 6px; }
+.modal-options { display: flex; flex-direction: column; gap: 6px; }
 .modal-options label {
   display: flex;
   align-items: center;
@@ -471,18 +502,19 @@ tbody tr.hidden { display: none; }
 }
 .modal-options label:hover { background: var(--bg-soft); }
 .modal-options input { accent-color: var(--accent); }
-.modal-foot { display: flex; justify-content: flex-end; gap: 8px; }
+.modal-group-actions button,
 .modal-foot button {
   appearance: none;
   border: 1px solid var(--rule);
   background: var(--bg-card);
-  padding: 8px 16px;
   border-radius: 6px;
   font: inherit;
-  font-size: 14px;
   cursor: pointer;
   color: var(--ink);
 }
+.modal-group-actions button { padding: 4px 9px; font-size: 12px; }
+.modal-foot { display: flex; justify-content: flex-end; gap: 8px; }
+.modal-foot button { padding: 8px 16px; font-size: 14px; }
 .modal-foot button.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 
 @media (max-width: 600px) {
