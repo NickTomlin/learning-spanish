@@ -4,8 +4,9 @@
  */
 import preterite from './preterite.js';
 import imperfect from './imperfect.js';
+import vocabulary from './vocabulary.js';
 
-export const SHEETS = { preterite, imperfect };
+export const SHEETS = { preterite, imperfect, vocabulary };
 
 /** [{ id, title }] for every sheet — enough to build a nav or picker. */
 export function sheetCatalog() {
