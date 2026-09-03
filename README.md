@@ -40,8 +40,9 @@ it prints — and whether it prints a worksheet or a reference sheet — are URL
 options like any other, so the nav carries a single `Printables` entry and
 study pages deep-link into a configuration of it. Interactive quizzes can be
 narrowed to specific categories and axis values, such as only `yo`, `él/ella`,
-and `ellos` pronouns. The current choices are stored in the `cats` and `axis`
-URL options, making a configured quiz bookmarkable and shareable.
+and `ellos` pronouns. The current choices are stored in human-readable `cats`
+and `axis` URL options, such as `axis=yo,el-ella-usted,ellos-ustedes`, making a
+configured quiz bookmarkable and shareable.
 
 ### Adding a sheet
 
@@ -58,9 +59,14 @@ URL options, making a configured quiz bookmarkable and shareable.
      worksheetInstructions: 'Write the definite and indefinite article.',
      referenceInstructions: 'Every noun, grouped by gender.',
 
-     // The forms every item inflects across. `shortValues` is used where
-     // space is tight (the printed worksheet); it defaults to `values`.
-     axis: { label: 'Article', values: ['definite', 'indefinite'], shortValues: ['def.', 'indef.'] },
+     // The forms every item inflects across. `ids` names them in quiz URLs;
+     // `shortValues` is used where space is tight on the printed worksheet.
+     axis: {
+       label: 'Article',
+       values: ['definite', 'indefinite'],
+       ids: ['definite', 'indefinite'],
+       shortValues: ['def.', 'indef.'],
+     },
 
      // `highlight` marks columns worth flagging in red in the reference table.
      categories: [

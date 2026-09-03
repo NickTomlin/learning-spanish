@@ -21,6 +21,7 @@ export default {
   axis: {
     label: 'Pronoun',
     values: ['yo', 'tú', 'él/ella/Ud.', 'nosotros', 'ellos/Uds.'],
+    ids: ['yo', 'tu', 'el-ella-usted', 'nosotros', 'ellos-ustedes'],
     // Compact labels used on the printed worksheet, where space is tight.
     shortValues: ['yo', 'tú', 'él', 'nos.', 'ellos'],
   },
