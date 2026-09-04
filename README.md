@@ -23,15 +23,17 @@ interactive study page and both printable documents — a worksheet of exercises
 and a reference sheet of every form — so none of them can drift apart.
 
 ```
-sheets/preterite.js     the data
+sheets/preterite.js     tense data
+sheets/vocabulary.js    vocabulary data (verbs derived from the preterite sheet)
 sheets/index.js         registry of every sheet
 lib/sheet.js            schema, validation, question sampling, seeded RNG
-lib/study-page.js       interactive page (reference · quiz · patterns)
+lib/study-page.js       interactive page (reference · typing/choice quiz · patterns)
 lib/worksheet-page.js   printable worksheet + answer key, and reference sheet
 css/theme.css           shared tokens
 css/study.css           interactive styles
 css/worksheet.css       paper + print styles
 preterite.html          shell: imports a sheet, mounts the study page
+vocabulary.html         the equivalent shell for vocabulary practice
 worksheet.html          the one printable page — every sheet, every config
 ```
 
@@ -53,6 +55,7 @@ configured quiz bookmarkable and shareable.
      id: 'gender',
      title: 'Género',
      subtitle: 'Noun gender and articles',
+     quizType: 'typing', // optional: `typing` (default) or `multiple-choice`
      itemNoun: 'noun',
      inputPlaceholder: 'article…',
      searchPlaceholder: 'Search nouns…',
@@ -87,8 +90,11 @@ configured quiz bookmarkable and shareable.
    };
    ```
 
-   `normalizeSheet` throws on a mismatched `forms` length or an unknown
-   `category`, so typos surface immediately instead of half-rendering.
+   `normalizeSheet` throws on a mismatched `forms` length, unknown `category`,
+   or unknown `quizType`, so typos surface immediately instead of half-rendering.
+   Multiple-choice sheets use unique answers from the same category as choices,
+   falling back to the full sheet when necessary. Items can share a
+   `distractorGroup` when their meanings overlap and should not appear together.
 
 2. **Register it** in `sheets/index.js` — one import and one entry. That alone
    makes `worksheet.html?sheet=<id>` work, gives you a reference sheet at
@@ -99,6 +105,16 @@ configured quiz bookmarkable and shareable.
    shell is the whole page; everything else comes from the sheet.
 
 4. **Link the study page** from `index.html`.
+
+### Vocabulary
+
+`vocabulary.html` is a normal study page backed by `sheets/vocabulary.js`. Its
+one-position axis stores each English meaning, and `quizType: 'multiple-choice'`
+turns those meanings into answer buttons. Verb terms and meanings are derived
+from `sheets/preterite.js`, with vocabulary-only labels for English senses that
+would otherwise overlap in one set of choices. Phrases and connectors live in
+the vocabulary sheet. This keeps shared verb knowledge in one place without a
+build step.
 
 ### Worksheets
 
@@ -145,5 +161,6 @@ page links to its reference sheet, carrying the quiz's current categories.
 # Local Development
 
 ```
-./serve.sh          # http://localhost:8000
+./serve.sh                    # http://localhost:8000
+node tests/validate-data.mjs  # sheet integrity and multiple-choice options
 ```
