@@ -54,6 +54,8 @@ h1 {
   letter-spacing: -0.02em;
   color: var(--ink);
 }
+::highlight(title-accent) { color: var(--accent); }
+
 .sub {
   font-family: var(--serif);
   font-style: italic;

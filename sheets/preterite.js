@@ -7,6 +7,7 @@
 export default {
   id: 'preterite',
   title: 'Pretérito',
+  titleAccent: 'é',
   subtitle: 'Spanish preterite — a study companion',
   footer: 'Ortografía cuenta. Tildes also.',
 
