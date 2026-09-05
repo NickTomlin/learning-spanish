@@ -54,16 +54,9 @@ h1 {
   letter-spacing: -0.02em;
   color: var(--ink);
 }
-@supports (clip-path: inset(0)) {
-  h1[data-accent-letter] { position: relative; }
-  h1[data-accent-ready]::after {
-    content: attr(data-accent-text);
-    position: absolute;
-    inset: 0;
-    color: var(--accent);
-    clip-path: inset(0 var(--title-accent-right) 66% var(--title-accent-left));
-    pointer-events: none;
-  }
+::highlight(title-accent) {
+  text-decoration: underline var(--accent) 0.045em;
+  text-underline-offset: 0.06em;
 }
 
 .sub {
