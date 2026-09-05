@@ -54,7 +54,17 @@ h1 {
   letter-spacing: -0.02em;
   color: var(--ink);
 }
-::highlight(title-accent) { color: var(--accent); }
+@supports (clip-path: inset(0)) {
+  h1[data-accent-letter] { position: relative; }
+  h1[data-accent-ready]::after {
+    content: attr(data-accent-text);
+    position: absolute;
+    inset: 0;
+    color: var(--accent);
+    clip-path: inset(0 var(--title-accent-right) 66% var(--title-accent-left));
+    pointer-events: none;
+  }
+}
 
 .sub {
   font-family: var(--serif);
