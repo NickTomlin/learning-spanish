@@ -51,10 +51,7 @@
     letter-spacing: -0.02em;
     color: var(--ink);
   }
-  ::highlight(title-accent) {
-    text-decoration: underline var(--accent) 0.045em;
-    text-underline-offset: 0.06em;
-  }
+  h1 .accent { color: var(--accent); }
   .sub {
     font-family: 'Fraunces', serif;
     font-style: italic;
@@ -106,7 +103,7 @@
 <body>
 <div class="wrap">
   <header>
-    <h1 data-accent-letter="ñ">Español</h1>
+    <h1>Espa<span class="accent">ñ</span>ol</h1>
     <p class="sub">Spanish learning bits and bobs</p>
   </header>
 
@@ -139,9 +136,5 @@
     </a>
   </nav>
 </div>
-<script type="module">
-  import { mountTitleAccents } from './lib/title-accent.js';
-  mountTitleAccents();
-</script>
 </body>
 </html>

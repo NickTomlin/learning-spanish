@@ -7,6 +7,7 @@
 export default {
   id: 'imperfect',
   title: 'Imperfecto',
+  titleHTML: 'Imperfect<span class="accent">o</span>',
   subtitle: 'Spanish imperfect — a study companion',
   footer: 'Only three irregulars in the whole tense. Enjoy it while it lasts.',
 
