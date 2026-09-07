@@ -54,7 +54,7 @@ h1 {
   letter-spacing: -0.02em;
   color: var(--ink);
 }
-h1 .accent { color: var(--accent); font-style: italic; font-weight: 500; }
+h1 .accent { color: var(--accent); }
 
 .sub {
   font-family: var(--serif);
