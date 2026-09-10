@@ -12,9 +12,9 @@ const vocabulary = normalizeSheet(vocabularyRaw);
 assert.equal(preterite.quizType, 'typing');
 assert.equal(imperfect.quizType, 'typing');
 assert.equal(vocabulary.quizType, 'multiple-choice');
-assert.ok(preterite.items.length >= 63, 'preterite should include at least 20 additions');
-assert.ok(imperfect.items.length >= 58, 'imperfect should include at least 20 additions');
-assert.ok(vocabulary.items.length >= 70, 'vocabulary should include at least 70 prompts');
+assert.ok(preterite.items.length >= 118, 'preterite should include the expanded verb list');
+assert.ok(imperfect.items.length >= 109, 'imperfect should include the expanded verb list');
+assert.ok(vocabulary.items.length >= 120, 'vocabulary should include a prompt per verb, phrase, and connector');
 
 for (const sheet of [preterite, imperfect, vocabulary]) {
   const terms = sheet.items.map((item) => normalizeAnswer(item.term));
@@ -48,6 +48,7 @@ const verbMeaningContrasts = [
   [['saber', 'to know a fact or know how'], ['conocer', 'to know a person or place']],
   [['beber', 'to drink'], ['tomar', 'to take']],
   [['dejar', 'to leave something behind or let'], ['salir', 'to go out or depart']],
+  [['andar', 'to walk around or go about'], ['caminar', 'to walk somewhere on foot']],
 ];
 for (const contrast of verbMeaningContrasts) {
   const [[firstTerm, firstMeaning], [secondTerm, secondMeaning]] = contrast;
@@ -62,6 +63,7 @@ const overlappingMeanings = [
   ['saber', 'conocer'],
   ['beber', 'tomar'],
   ['dejar', 'salir'],
+  ['andar', 'caminar'],
   ['mientras', 'mientras que'],
 ];
 for (const [firstTerm, secondTerm] of overlappingMeanings) {

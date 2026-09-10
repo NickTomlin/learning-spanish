@@ -7,6 +7,8 @@ const vocabularyVerbMeanings = {
   tomar: 'to take',
   dejar: 'to leave something behind or let',
   salir: 'to go out or depart',
+  andar: 'to walk around or go about',
+  caminar: 'to walk somewhere on foot',
 };
 
 const verbDistractorGroups = {
@@ -16,6 +18,8 @@ const verbDistractorGroups = {
   tomar: 'drink',
   dejar: 'leave',
   salir: 'leave',
+  andar: 'walk',
+  caminar: 'walk',
 };
 
 const verbItems = preterite.items.map(({ term, gloss }) => ({
