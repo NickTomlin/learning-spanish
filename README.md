@@ -145,6 +145,14 @@ the sheet never gives away an answer it also asks for.
 `blanks`, `tables`, `seed`, and `key` describe exercises, so they're ignored —
 and dropped from the URL — when `doc=reference`.
 
+### Quiz weighting
+
+Interactive quizzes use the axis weights in `quiz-config.js`. Unlisted axis ids
+have weight `1`; a weight of `2` makes that form twice as likely as an unlisted
+form without excluding anything. The current configuration gives `yo` and
+`él/ella/Ud.` double weight in every sheet that uses those axis ids. Quiz option
+filters still take precedence, so only currently selected forms can be asked.
+
 ### Reference sheets
 
 `worksheet.html?sheet=<id>&doc=reference` prints the other side of the same
