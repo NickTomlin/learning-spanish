@@ -17,6 +17,17 @@
   --bad-bg: #f3d9d9;
   --highlight: #f5e6b8;
 
+  --pronoun-yo: #287a4b;
+  --pronoun-yo-bg: #dff0e4;
+  --pronoun-tu: #a65f00;
+  --pronoun-tu-bg: #fae7ca;
+  --pronoun-third: #2f6f9f;
+  --pronoun-third-bg: #dceaf5;
+  --pronoun-nosotros: #7447a8;
+  --pronoun-nosotros-bg: #eee2f7;
+  --pronoun-they: #b23a48;
+  --pronoun-they-bg: #f6dde1;
+
   --serif: 'Fraunces', Georgia, serif;
   --sans: 'DM Sans', system-ui, sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, monospace;
@@ -55,6 +66,13 @@ h1 {
   color: var(--ink);
 }
 h1 .accent { color: var(--accent); }
+
+.axis-label { font-weight: 500; }
+.pronoun-yo { color: var(--pronoun-yo); }
+.pronoun-tu { color: var(--pronoun-tu); }
+.pronoun-third { color: var(--pronoun-third); }
+.pronoun-nosotros { color: var(--pronoun-nosotros); }
+.pronoun-they { color: var(--pronoun-they); }
 
 .sub {
   font-family: var(--serif);

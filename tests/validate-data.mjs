@@ -7,6 +7,8 @@ import {
   normalizeSheet,
   seededRandom,
   weightedPick,
+  axisClass,
+  axisClassForLabel,
 } from '../lib/sheet.js';
 import { quizConfig } from '../quiz-config.js';
 import preteriteRaw from '../sheets/preterite.js';
@@ -16,6 +18,13 @@ import vocabularyRaw from '../sheets/vocabulary.js';
 const preterite = normalizeSheet(preteriteRaw);
 const imperfect = normalizeSheet(imperfectRaw);
 const vocabulary = normalizeSheet(vocabularyRaw);
+
+assert.deepEqual(
+  preterite.axis.ids.map((_, index) => axisClass(preterite.axis, index)),
+  ['pronoun-yo', 'pronoun-tu', 'pronoun-third', 'pronoun-nosotros', 'pronoun-they'],
+);
+assert.equal(axisClassForLabel(imperfect.axis, 'tú'), 'pronoun-tu');
+assert.equal(axisClass(vocabulary.axis, 0), '');
 
 assert.equal(preterite.quizType, 'typing');
 assert.equal(imperfect.quizType, 'typing');
