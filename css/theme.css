@@ -80,3 +80,7 @@ footer.page-footer {
 @media (max-width: 600px) {
   .wrap { padding: 32px 20px 64px; }
 }
+
+@media (max-width: 400px) {
+  .wrap { padding: 28px 16px 56px; }
+}

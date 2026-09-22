@@ -267,9 +267,10 @@ tbody tr.hidden { display: none; }
   font-size: 15px;
   font-weight: 500;
 }
-.q-input-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.q-input-row { display: flex; gap: 8px; margin-bottom: 12px; min-width: 0; }
 .q-input {
   flex: 1;
+  min-width: 0;
   font-family: var(--mono);
   font-size: 20px;
   padding: 14px 16px;
@@ -498,9 +499,11 @@ tbody tr.hidden { display: none; }
   max-width: 420px;
   max-height: calc(100vh - 48px);
   width: 100%;
+  min-width: 0;
   padding: 28px;
   border: 1px solid var(--rule);
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .modal-title { font-family: var(--serif); font-size: 22px; margin: 0 0 4px; font-weight: 500; }
 .modal-sub {
@@ -548,5 +551,35 @@ tbody tr.hidden { display: none; }
   .q-choices { grid-template-columns: 1fr; }
   nav.tabs { overflow-x: auto; }
   .header-top { flex-direction: column; }
-  .print-links { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
+  .print-links { flex-direction: row; flex-wrap: wrap; align-items: flex-start; width: 100%; }
+  .print-link { justify-content: center; min-height: 44px; }
+  .chip { min-height: 44px; }
+  .search-input { font-size: 16px; }
+  .search-clear { width: 44px; height: 44px; right: 4px; }
+  .quiz-settings { min-height: 44px; padding: 9px 12px; }
+  .accent-bar button { width: 44px; height: 44px; }
+  .modal { padding: 16px; }
+  .modal-card { max-height: calc(100vh - 32px); padding: 20px; }
+  .modal-options label { min-height: 44px; padding: 10px; }
+  .modal-group-actions button,
+  .modal-foot button { min-height: 44px; padding: 9px 12px; }
+}
+
+@media (max-width: 400px) {
+  .print-links { flex-direction: column; align-items: stretch; }
+  .print-link { width: 100%; }
+  .quiz-card { padding: 24px 16px; }
+  .q-term { font-size: 32px; }
+  .q-prompt { margin-bottom: 20px; }
+  .q-axis { margin-bottom: 20px; }
+  .q-input-row { flex-direction: column; }
+  .q-input,
+  .q-input-row .btn-primary { width: 100%; }
+  .q-input-row .btn-primary { min-height: 44px; }
+}
+
+@supports (height: 100dvh) {
+  @media (max-width: 600px) {
+    .modal-card { max-height: calc(100dvh - 32px); }
+  }
 }
