@@ -35,6 +35,7 @@ header.study-header { margin-bottom: 40px; }
   transition: all 0.15s;
 }
 .print-link:hover { border-color: var(--accent-soft); color: var(--accent); }
+.print-link-label-short { display: none; }
 
 nav.tabs {
   margin-top: 32px;
@@ -546,13 +547,25 @@ tbody tr.hidden { display: none; }
 .modal-foot button.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 
 @media (max-width: 600px) {
+  header.study-header { margin-bottom: 28px; }
+  .study-header h1 { font-size: clamp(44px, 15vw, 56px); }
+  .study-header .sub { font-size: 16px; }
+  .header-top { flex-direction: column; gap: 12px; }
+  .print-links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+    margin-top: 0;
+  }
+  .print-link { justify-content: center; min-height: 44px; padding: 7px 10px; }
+  .print-link-label-full { display: none; }
+  .print-link-label-short { display: inline; }
+  nav.tabs { margin-top: 20px; overflow-x: auto; }
+  .panel { margin-top: 24px; }
   .quiz-card { padding: 28px 20px; }
   .q-term { font-size: 34px; }
   .q-choices { grid-template-columns: 1fr; }
-  nav.tabs { overflow-x: auto; }
-  .header-top { flex-direction: column; }
-  .print-links { flex-direction: row; flex-wrap: wrap; align-items: flex-start; width: 100%; }
-  .print-link { justify-content: center; min-height: 44px; }
   .chip { min-height: 44px; }
   .search-input { font-size: 16px; }
   .search-clear { width: 44px; height: 44px; right: 4px; }
@@ -566,8 +579,6 @@ tbody tr.hidden { display: none; }
 }
 
 @media (max-width: 400px) {
-  .print-links { flex-direction: column; align-items: stretch; }
-  .print-link { width: 100%; }
   .quiz-card { padding: 24px 16px; }
   .q-term { font-size: 32px; }
   .q-prompt { margin-bottom: 20px; }
