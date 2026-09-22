@@ -267,6 +267,11 @@ tbody tr.hidden { display: none; }
   font-size: 15px;
   font-weight: 500;
 }
+.q-axis.pronoun-yo { color: var(--pronoun-yo); background: var(--pronoun-yo-bg); }
+.q-axis.pronoun-tu { color: var(--pronoun-tu); background: var(--pronoun-tu-bg); }
+.q-axis.pronoun-third { color: var(--pronoun-third); background: var(--pronoun-third-bg); }
+.q-axis.pronoun-nosotros { color: var(--pronoun-nosotros); background: var(--pronoun-nosotros-bg); }
+.q-axis.pronoun-they { color: var(--pronoun-they); background: var(--pronoun-they-bg); }
 .q-input-row { display: flex; gap: 8px; margin-bottom: 12px; }
 .q-input {
   flex: 1;
