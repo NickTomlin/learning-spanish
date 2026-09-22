@@ -1,6 +1,14 @@
 import assert from 'node:assert/strict';
 
-import { allQuestions, multipleChoiceAnswers, normalizeAnswer, normalizeSheet, seededRandom } from '../lib/sheet.js';
+import {
+  allQuestions,
+  multipleChoiceAnswers,
+  normalizeAnswer,
+  normalizeSheet,
+  seededRandom,
+  weightedPick,
+} from '../lib/sheet.js';
+import { quizConfig } from '../quiz-config.js';
 import preteriteRaw from '../sheets/preterite.js';
 import imperfectRaw from '../sheets/imperfect.js';
 import vocabularyRaw from '../sheets/vocabulary.js';
@@ -12,6 +20,16 @@ const vocabulary = normalizeSheet(vocabularyRaw);
 assert.equal(preterite.quizType, 'typing');
 assert.equal(imperfect.quizType, 'typing');
 assert.equal(vocabulary.quizType, 'multiple-choice');
+assert.ok(Object.values(quizConfig.axisWeights).every((weight) => (
+  Number.isFinite(weight) && weight > 0
+)), 'configured quiz weights must be positive numbers');
+assert.equal(weightedPick(['focused', 'default'], (item) => (
+  item === 'focused' ? 2 : 1
+), () => 0.6), 'focused');
+assert.equal(weightedPick(['focused', 'default'], (item) => (
+  item === 'focused' ? 2 : 1
+), () => 0.8), 'default');
+assert.throws(() => weightedPick(['invalid'], () => 0), /positive numbers/);
 assert.ok(preterite.items.length >= 118, 'preterite should include the expanded verb list');
 assert.ok(imperfect.items.length >= 109, 'imperfect should include the expanded verb list');
 assert.ok(vocabulary.items.length >= 120, 'vocabulary should include a prompt per verb, phrase, and connector');
