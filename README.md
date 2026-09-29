@@ -135,6 +135,7 @@ and its worksheet link points at `?sheet=preterite&cats=j-stem`.
 | `blanks` | Numbered fill-in-the-blank prompts                  | `24`    |
 | `tables` | Blank full-conjugation tables                       | `0`     |
 | `cats`   | Comma-separated category ids to draw from           | all     |
+| `axis`   | Comma-separated form ids, e.g. `yo,el-ella-usted`    | all     |
 | `seed`   | Any string; same seed ⇒ same questions              | random  |
 | `key`    | `0` to omit the answer key                          | `1`     |
 
@@ -142,7 +143,15 @@ Blanks are dealt round-robin across items, so every item is asked once before
 any repeats, and items used by a table exercise are kept out of the blanks —
 the sheet never gives away an answer it also asks for.
 
-`blanks`, `tables`, `seed`, and `key` describe exercises, so they're ignored —
+Use the pronoun checkboxes to exclude subjects such as `tú` or `nosotros`.
+The selection applies to blanks, conjugation tables, and their answer key;
+at least one form must remain selected. Study pages carry the quiz's selected
+forms into the worksheet link. For example,
+`worksheet.html?sheet=preterite&axis=yo,el-ella-usted,ellos-ustedes` excludes
+`tú` and `nosotros`. Unknown form ids are ignored; if none match, all forms
+are selected.
+
+`blanks`, `tables`, `axis`, `seed`, and `key` describe exercises, so they're ignored —
 and dropped from the URL — when `doc=reference`.
 
 ### Quiz weighting
@@ -171,4 +180,5 @@ page links to its reference sheet, carrying the quiz's current categories.
 ```
 ./serve.sh                    # http://localhost:8000
 node tests/validate-data.mjs  # sheet integrity and multiple-choice options
+node tests/worksheet-subjects.mjs  # printable subject filters and seeded selection
 ```
