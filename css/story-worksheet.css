@@ -1,0 +1,35 @@
+.story-list, .story-answers {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.story-item {
+  display: flex;
+  gap: 10px;
+  break-inside: avoid;
+  padding: 9px 0;
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.story-num {
+  flex: none;
+  min-width: 24px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #8a7d6b;
+  text-align: right;
+}
+
+.story-blank {
+  display: inline-block;
+  min-width: 0.85in;
+  border-bottom: 1px solid #b9ad9b;
+  vertical-align: baseline;
+}
+
+.story-answers .story-item { padding: 5px 0; }
+.story-answers .story-item > span:last-child { font-family: var(--mono); font-size: 12px; }
+.story-note { display: block; font-family: var(--serif); font-size: 12px; color: #6b5d4d; }
