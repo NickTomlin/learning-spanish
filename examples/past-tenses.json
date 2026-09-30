@@ -1,0 +1,14 @@
+{
+  "title": "Una noche en la biblioteca",
+  "instructions": "Completa cada espacio con el pretérito o el imperfecto del verbo entre paréntesis.",
+  "questions": [
+    { "text": "___ (ser) las ocho y la plaza ___ (estar) casi vacía.", "answers": ["Eran", "estaba"] },
+    { "text": "Todos los viernes, Lucía ___ (ir) a la biblioteca después del trabajo.", "answers": ["iba"] },
+    { "text": "Aquella noche, Lucía ___ (caminar) hacia la entrada cuando ___ (oír) un golpe.", "answers": ["caminaba", "oyó"] },
+    { "text": "Junto a la puerta, un hombre ___ (buscar) algo debajo de un banco.", "answers": ["buscaba"] },
+    { "text": "Lucía ___ (acercarse) para ayudarlo, pero él ___ (ponerse) rojo de vergüenza.", "answers": ["se acercó", "se puso"] },
+    { "text": "El hombre le ___ (decir) que ___ (creer) que había perdido las llaves de la biblioteca.", "answers": ["dijo", "creía"] },
+    { "text": "Lucía las ___ (encontrar) debajo del banco y se las dio.", "answers": ["encontró"] },
+    { "text": "De camino a casa, Lucía ___ (pensar) en aquel encuentro.", "answers": ["pensaba"], "note": "Pensó también sería posible si se presenta el trayecto como un episodio completo." }
+  ]
+}
