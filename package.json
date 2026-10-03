@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@earendil-works/pi-coding-agent": "0.87.1"
+  },
+  "scripts": {
+    "test:practice": "node --test tests/practice.test.mjs"
+  }
+}

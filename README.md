@@ -182,9 +182,45 @@ The project skills in `.agents/skills/` offer three ways to practise with Pi:
 - `/skill:practice-spanish-story-comprehension` runs a reading, retelling, and correction exercise.
 
 Start `pi` in this repository to discover them (or `/reload` after adding them
-to an existing session). The past-tense story skill can also write a printable quiz and answer key;
-the site's sheet-based worksheets remain separate. For a PDF without an agent,
-install Chromium and run:
+to an existing session). The past-tense story skill can also write a printable
+quiz and answer key; the site's sheet-based worksheets remain separate.
+
+For a batch of all three worksheets, install Chromium, sign in to Pi with
+`/login` (Luna and Sol must be available), and run from this repo:
+
+```
+npm install --ignore-scripts          # once: install the Pi SDK
+./practice.mjs make                   # fresh random story and worksheets; no print job
+```
+
+Review the three PDFs listed by `make`, especially `printing/current-story.html`
+or `printing/current-story.pdf`. Each PDF has an answer key on page two. Then:
+
+```
+lpstat -d                             # check the default printer
+./practice.mjs print                  # send all three, duplex requested
+```
+
+`./practice.mjs make --reuse` rebuilds the saved batch without model calls.
+Use `./practice.mjs make --theme childhood` only when you want that focus.
+
+A new story uses two fresh, tool-free Pi sessions: Luna plans an outline from
+seed-selected scenarios, complications, and opening styles, then Sol writes the
+quiz from that outline. The seed does not require a time or weather opening;
+`--theme childhood` selects only childhood scenarios. Each plain `make` picks a
+new random seed and makes a new story; a seed chooses the ingredients and
+worksheet questions, not the exact wording of an LLM regeneration. The outline
+and quiz are saved in `printing/`; `make --seed <previous-seed>` reuses the saved
+outline and calls only Sol. `make --reuse` keeps the previous seed and quiz with
+**no model call**. New generations report each stage's token usage and Pi's
+catalog-based cost estimate in `printing/current-story-usage.json`. This is not
+necessarily the amount billed under a subscription. The seed and PDF paths are
+saved in `printing/current-run.json`. To try the deterministic
+workflow without calling a model, run
+`./practice.mjs make --story examples/past-tenses.json`. The `print` command
+sends the reviewed PDFs to the default printer with duplex requested.
+
+For one PDF without an agent, install Chromium and run:
 
 ```
 ./print-worksheet.py 'worksheet.html?sheet=preterite&blanks=24&seed=practice-1'
@@ -212,5 +248,6 @@ it. The GitHub repository itself is public, so don't commit private material,
 including quiz responses or generated exercises. `./serve.sh` binds to
 localhost for local practice.
 
-Run `python3 -m unittest discover -s tests -p 'test_print*.py'` to check PDF
-export (requires Chromium; it never sends a real print job).
+Run `npm run test:practice` and
+`python3 -m unittest discover -s tests -p 'test_print*.py'` to check PDF
+export (requires Chromium; neither test sends a real print job).
