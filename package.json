@@ -5,6 +5,7 @@
     "@earendil-works/pi-coding-agent": "0.87.1"
   },
   "scripts": {
+    "daily": "./practice.mjs make && ./practice.mjs print",
     "test:practice": "node --test tests/practice.test.mjs"
   }
 }
