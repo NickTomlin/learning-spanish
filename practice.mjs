@@ -6,12 +6,14 @@ import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { storyIngredients } from "./story-prompts.mjs";
+import { reviewIssues } from "./story-review.mjs";
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const PRINTING = join(ROOT, "printing");
 const STORY = join(PRINTING, "current-story.json");
 const OUTLINE = join(PRINTING, "current-outline.json");
 const STORY_USAGE = join(PRINTING, "current-story-usage.json");
+const STORY_REVIEW = join(PRINTING, "current-story-review.json");
 const MANIFEST = join(PRINTING, "current-run.json");
 const PROMPTER_MODEL = "openai-codex/gpt-5.6-luna";
 const TEACHER_MODEL = "openai-codex/gpt-6-sol";
@@ -110,18 +112,39 @@ async function generateStory(seed, theme) {
   const taught = await askPi(modelRuntime, TEACHER_MODEL,
     "You are a Spanish teacher writing a printable preterite/imperfect exercise. Return only valid JSON, without Markdown.",
     `Turn this outline into one coherent intermediate-level past-tense story quiz: ${JSON.stringify(outline)}. Follow the skill guidance below, especially tense contrasts and printable format. Preserve the outline's distinctive events, opening approach and resolution without narrating the same event twice. Do not begin with a generic clock time, time of day, or weather unless the plot requires it. Every blank answer MUST be simple preterite (pretérito indefinido) or imperfect; never compound tenses such as había movido, present, future, or subjunctive. Rewrite an earlier event if necessary so its blank takes one of the two target tenses. Return {"title":"...","instructions":"...","questions":[{"text":"___ (infinitive) ...","answers":["conjugated form"],"note":"optional viewpoint explanation"}]} with 6–10 chronological questions, one or two ___ blanks in each, one answer per blank, and at least one nuanced case with a note. Do not include numbering in question text.\n\n${skill}`);
-  const story = taught.value;
+  let story = taught.value;
   stages.teacher = taught.usage;
-  const estimatedUsd = Object.values(stages).reduce((total, usage) => total + usage.estimatedUsd, 0);
-  await writeFile(STORY_USAGE, JSON.stringify({ seed, stages, estimatedUsd }, null, 2) + "\n");
-  console.log(`Estimated model cost this generation: $${estimatedUsd.toFixed(4)} (catalog rates, not a bill)`);
-  for (const [index, question] of (story.questions || []).entries()) {
-    for (const answer of question.answers || []) {
-      if (/\bhab(?:ía|ías|íamos|íais|ían)\s+\p{L}+/iu.test(answer)) {
-        throw new Error(`Question ${index + 1} uses a compound tense (${answer}); rerun with the same seed to retry only Sol`);
-      }
-    }
+  const checks = [];
+  async function saveChecks() {
+    const estimatedUsd = Object.values(stages).reduce((total, usage) => total + usage.estimatedUsd, 0);
+    await writeFile(STORY_USAGE, JSON.stringify({ seed, stages, estimatedUsd }, null, 2) + "\n");
+    await writeFile(STORY_REVIEW, JSON.stringify({ seed, passed: checks.at(-1)?.issues.length === 0, checks }, null, 2) + "\n");
+    console.log(`Estimated model cost this generation: $${estimatedUsd.toFixed(4)} (catalog rates, not a bill)`);
   }
+  async function review(candidate, stage) {
+    const result = await askPi(modelRuntime, TEACHER_MODEL,
+      "You independently review Spanish teaching materials. Return only valid JSON, without Markdown.",
+      `Check this preterite/imperfect worksheet and answer key against the story outline. Check every conjugation, tense choice, subject, accent, idiom, chronology, and whether the answer actually fills its blank. Treat justified viewpoint alternatives as acceptable. Find concrete errors, not stylistic preferences. Outline: ${JSON.stringify(outline)}\nWorksheet: ${JSON.stringify(candidate)}\nReturn exactly {"pass":true,"issues":[]} if correct; otherwise {"pass":false,"issues":["Question N: specific problem and suggested fix",...]}. Never claim a pass if an answer is wrong.`);
+    stages[stage] = result.usage;
+    const issues = reviewIssues(result.value, candidate);
+    checks.push({ stage, issues });
+    await saveChecks();
+    return issues;
+  }
+
+  let issues = await review(story, "review");
+  if (issues.length) {
+    console.log(`Reviewer found ${issues.length} issue(s); asking Sol for one correction.`);
+    const corrected = await askPi(modelRuntime, TEACHER_MODEL,
+      "You correct Spanish worksheets. Return only the complete corrected JSON quiz, without Markdown.",
+      `Correct these specific issues: ${JSON.stringify(issues)}\nOriginal outline: ${JSON.stringify(outline)}\nDraft quiz: ${JSON.stringify(story)}\nPreserve the story and existing correct answers. Fix grammar and continuity. Every blank must take simple preterite or imperfect, never a compound tense. Return the full quiz JSON with title, instructions, and questions, each with text and answers.`);
+    story = corrected.value;
+    stages.correction = corrected.usage;
+    await saveChecks();
+    issues = await review(story, "recheck");
+  }
+  if (issues.length) throw new Error(`Story review failed; nothing will print. See ${STORY_REVIEW}`);
+  console.log("Story passed independent review.");
   await writeFile(STORY, JSON.stringify(story, null, 2) + "\n");
 }
 
@@ -147,7 +170,10 @@ async function make(options) {
     const source = resolve(options.story);
     if (source !== STORY) await writeFile(STORY, await readFile(source));
     await rm(STORY_USAGE, { force: true });
+    await rm(STORY_REVIEW, { force: true });
   } else if (!options.reuse) {
+    await rm(STORY_USAGE, { force: true });
+    await rm(STORY_REVIEW, { force: true });
     console.log(`Outline: ${PROMPTER_MODEL} if needed; quiz: ${TEACHER_MODEL}...`);
     await generateStory(seed, options.theme);
   }

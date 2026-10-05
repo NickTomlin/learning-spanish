@@ -153,6 +153,12 @@ form without excluding anything. The current configuration gives `yo` and
 `él/ella/Ud.` double weight in every sheet that uses those axis ids. Quiz option
 filters still take precedence, so only currently selected forms can be asked.
 
+Each sheet also keeps its 20 most recent questions in local storage and avoids
+them while other questions are available. Question history uses category, term,
+and axis ids, so reordering sheet data does not invalidate it; removed questions
+are discarded when the sheet next loads. The gear menu can clear all locally
+stored quiz settings and history, keyboard drafts, and saved keyboard entries.
+
 ### Reference sheets
 
 `worksheet.html?sheet=<id>&doc=reference` prints the other side of the same
@@ -190,11 +196,18 @@ For a batch of all three worksheets, install Chromium, sign in to Pi with
 
 ```
 npm install --ignore-scripts          # once: install the Pi SDK
-./practice.mjs make                   # fresh random story and worksheets; no print job
+npm run daily                         # generate a fresh round and print it
 ```
 
-Review the three PDFs listed by `make`, especially `printing/current-story.html`
-or `printing/current-story.pdf`. Each PDF has an answer key on page two. Then:
+`daily` prints to your default printer with duplex requested, without a chance
+to review the generated story yourself. A fresh, tool-free Sol session checks the
+quiz and key; if it finds issues, Sol gets one correction pass and a second fresh
+review. If generation, review, or PDF export fails, nothing is sent to the printer.
+An LLM review can still miss mistakes, so review the PDFs yourself when accuracy
+matters. To review
+first instead, run `./practice.mjs make` and inspect the three PDFs it lists,
+especially `printing/current-story.html` or `printing/current-story.pdf`. Each
+PDF has an answer key on page two. Then:
 
 ```
 lpstat -d                             # check the default printer
@@ -204,17 +217,18 @@ lpstat -d                             # check the default printer
 `./practice.mjs make --reuse` rebuilds the saved batch without model calls.
 Use `./practice.mjs make --theme childhood` only when you want that focus.
 
-A new story uses two fresh, tool-free Pi sessions: Luna plans an outline from
-seed-selected scenarios, complications, and opening styles, then Sol writes the
-quiz from that outline. The seed does not require a time or weather opening;
+A new story uses fresh, tool-free Pi sessions: Luna plans an outline from
+seed-selected scenarios, complications, and opening styles; Sol writes the quiz
+and a separate Sol session reviews it. The seed does not require a time or weather opening;
 `--theme childhood` selects only childhood scenarios. Each plain `make` picks a
 new random seed and makes a new story; a seed chooses the ingredients and
 worksheet questions, not the exact wording of an LLM regeneration. The outline
 and quiz are saved in `printing/`; `make --seed <previous-seed>` reuses the saved
 outline and calls only Sol. `make --reuse` keeps the previous seed and quiz with
 **no model call**. New generations report each stage's token usage and Pi's
-catalog-based cost estimate in `printing/current-story-usage.json`. This is not
-necessarily the amount billed under a subscription. The seed and PDF paths are
+catalog-based cost estimate in `printing/current-story-usage.json` and the
+review result in `printing/current-story-review.json`. This is not necessarily
+the amount billed under a subscription. The seed and PDF paths are
 saved in `printing/current-run.json`. To try the deterministic
 workflow without calling a model, run
 `./practice.mjs make --story examples/past-tenses.json`. The `print` command

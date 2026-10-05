@@ -36,7 +36,9 @@ assert.ok(vocabulary.items.length >= 120, 'vocabulary should include a prompt pe
 
 for (const sheet of [preterite, imperfect, vocabulary]) {
   const terms = sheet.items.map((item) => normalizeAnswer(item.term));
+  const questionKeys = allQuestions(sheet).map((question) => question.key);
   assert.equal(new Set(terms).size, terms.length, `${sheet.id} contains duplicate terms`);
+  assert.equal(new Set(questionKeys).size, questionKeys.length, `${sheet.id} contains duplicate question keys`);
   assert.ok(sheet.items.every((item) => item.forms.length === sheet.axis.values.length));
 }
 

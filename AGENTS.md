@@ -10,7 +10,8 @@ The site's sheet-based PDFs use `print-worksheet.py`; agent-written story quizze
 use `print-story.py` with JSON like `examples/past-tenses.json`. `practice.mjs`
 combines both into a reviewed batch: `make` generates a fresh random story by
 default; `make --reuse` avoids model calls. New story generation uses Luna for an
-outline, then Sol for the quiz. Keep generated JSON, HTML, and PDFs in
+outline, then fresh Sol sessions for the quiz and independent review. Keep
+generated JSON, HTML, and PDFs in
 gitignored `printing/`. Only send a PDF to a physical printer when explicitly
 asked; the individual PDF scripts require `--print`, while `practice.mjs` uses a
 separate `print` command. The GitHub repository is public. Netlify publishes only the allowlisted `dist/`

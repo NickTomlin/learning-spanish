@@ -9,6 +9,13 @@ header.study-header { margin-bottom: 40px; }
   gap: 16px;
 }
 
+.header-actions {
+  flex: none;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
 /* The two things you can print from a study page, stacked beside the title. */
 .print-links {
   flex: none;
@@ -36,6 +43,18 @@ header.study-header { margin-bottom: 40px; }
 }
 .print-link:hover { border-color: var(--accent-soft); color: var(--accent); }
 .print-link-label-short { display: none; }
+.settings-button {
+  appearance: none;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--bg-card);
+  color: var(--ink-soft);
+  font: 18px/1 var(--sans);
+  cursor: pointer;
+}
+.settings-button:hover { border-color: var(--accent-soft); color: var(--accent); }
 
 nav.tabs {
   margin-top: 32px;
@@ -545,20 +564,43 @@ tbody tr.hidden { display: none; }
 .modal-foot { display: flex; justify-content: flex-end; gap: 8px; }
 .modal-foot button { padding: 8px 16px; font-size: 14px; }
 .modal-foot button.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.storage-settings {
+  margin-bottom: 24px;
+  padding: 16px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+}
+.storage-settings h4 { margin: 0 0 6px; font-size: 14px; }
+.storage-settings p { margin: 0 0 14px; color: var(--ink-soft); font-size: 13px; }
+.storage-settings .settings-status { margin: 10px 0 0; color: var(--bad); }
+.danger-button {
+  appearance: none;
+  padding: 8px 12px;
+  border: 1px solid var(--bad);
+  border-radius: 6px;
+  background: var(--bg-card);
+  color: var(--bad);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.danger-button:hover { background: var(--bad-bg); }
 
 @media (max-width: 600px) {
   header.study-header { margin-bottom: 28px; }
   .study-header h1 { font-size: clamp(44px, 15vw, 56px); }
   .study-header .sub { font-size: 16px; }
   .header-top { flex-direction: column; gap: 12px; }
+  .header-actions { width: 100%; }
   .print-links {
+    flex: 1;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
-    width: 100%;
     margin-top: 0;
   }
   .print-link { justify-content: center; min-height: 44px; padding: 7px 10px; }
+  .settings-button { width: 44px; height: 44px; }
   .print-link-label-full { display: none; }
   .print-link-label-short { display: inline; }
   nav.tabs { margin-top: 20px; overflow-x: auto; }
