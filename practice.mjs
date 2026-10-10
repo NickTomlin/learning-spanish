@@ -183,9 +183,12 @@ async function make(options) {
     const url = `worksheet.html?sheet=${sheet}&blanks=24&tables=0&seed=${seed}-${sheet}&key=1`;
     pdfs.push(pdfFrom(await run(join(ROOT, "print-worksheet.py"), [url])));
   }
-  pdfs.push(pdfFrom(await run(join(ROOT, "print-story.py"), [STORY])));
-  await writeFile(MANIFEST, JSON.stringify({ seed, pdfs }, null, 2) + "\n");
-  console.log(`Seed: ${seed}\nReview before printing:`);
+  const storyOutput = await run(join(ROOT, "print-story.py"), [STORY]);
+  pdfs.push(pdfFrom(storyOutput));
+  const storyKey = storyOutput.match(/^Story key: ([0-9A-F]{8})$/m)?.[1];
+  if (!storyKey) throw new Error(`Story script did not report a lookup key:\n${storyOutput}`);
+  await writeFile(MANIFEST, JSON.stringify({ seed, storyKey, pdfs }, null, 2) + "\n");
+  console.log(`Story key: ${storyKey}\nSeed: ${seed}\nReview before printing:`);
   for (const pdf of pdfs) console.log(`  ${pdf}`);
   console.log(`Story HTML: printing/current-story.html\nThen run: ./practice.mjs print`);
 }

@@ -253,7 +253,18 @@ printable past-tense quiz, or supply your own JSON following
 `examples/past-tenses.json`: each question has `text` with `___` blanks and an
 `answers` array in the same order. `./print-story.py printing/my-quiz.json`
 produces an HTML preview and PDF in `printing/`, with the key on a separate
-page. Use `--no-key` to leave it out; `--print` is opt-in for a physical copy.
+page. Each story quiz also gets a short lookup key on the worksheet and, when
+included, the answer page. `--no-key` omits the answer page. The archive keeps the 15
+most recently first-saved distinct quiz versions in ignored
+`printing/story-history/`; saving identical content again does not change its
+place in the history. It stays on this machine and is not part of the site.
+
+To save a conversational quiz for later explanation, write its full quiz JSON
+to `printing/` and run `python3 story_archive.py save printing/<name>.json`.
+Use the returned key with the `explain-spanish-story` skill. The local commands
+`python3 story_archive.py list` and `python3 story_archive.py show KEY` list
+saved keys and retrieve a quiz. Use `--no-key` to omit the printed answer page;
+`--print` is opt-in for a physical copy.
 Netlify uses `build-site.sh` to copy only the site HTML, runtime CSS, JS, and
 sheet data into ignored `dist/`, its configured publish directory. Run
 `./build-site.sh` and inspect `dist/` before deployment. Never upload the whole
