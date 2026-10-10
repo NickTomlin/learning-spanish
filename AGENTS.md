@@ -16,6 +16,8 @@ gitignored `printing/`. Only send a PDF to a physical printer when explicitly
 asked; the individual PDF scripts require `--print`, while `practice.mjs` uses a
 separate `print` command. The GitHub repository is public. Netlify publishes only the allowlisted `dist/`
 output of `build-site.sh`; never publish the repo root or commit private material.
+Story quizzes receive local lookup keys; use the `explain-spanish-story` skill
+to explain a saved question by key.
 
 ## Don't over-optimize
 

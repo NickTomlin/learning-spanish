@@ -36,7 +36,7 @@ test("review verdicts fail closed and catch compound answers", () => {
 test("deterministic worksheets and opt-in printing", async () => {
   const dir = await mkdtemp(join(tmpdir(), "spanish-practice-"));
   try {
-    for (const file of ["practice.mjs", "story-prompts.mjs", "story-review.mjs", "print-story.py", "print-worksheet.py", "worksheet.html"]) {
+    for (const file of ["practice.mjs", "story-prompts.mjs", "story-review.mjs", "story_archive.py", "print-story.py", "print-worksheet.py", "worksheet.html"]) {
       await cp(join(ROOT, file), join(dir, file));
     }
     for (const folder of ["css", "lib", "sheets", "templates", "examples"]) {
