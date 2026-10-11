@@ -169,6 +169,48 @@ page links to its reference sheet, carrying the quiz's current categories.
 # Local Development
 
 ```
-./serve.sh                    # http://localhost:8000
+./serve.sh                    # http://localhost:8000 (loopback only)
 node tests/validate-data.mjs  # sheet integrity and multiple-choice options
 ```
+
+### Local exercise routine
+
+The project skills in `.agents/skills/` offer three ways to practise with Pi:
+
+- `/skill:spanish-exercises` opens a site quiz or makes a PDF from the existing sheets.
+- `/skill:practice-spanish-past-tenses` runs a conversational preterite-versus-imperfect story quiz.
+- `/skill:practice-spanish-story-comprehension` runs a reading, retelling, and correction exercise.
+
+Start `pi` in this repository to discover them (or `/reload` after adding them
+to an existing session). The past-tense story skill can also write a printable quiz and answer key;
+the site's sheet-based worksheets remain separate. For a PDF without an agent,
+install Chromium and run:
+
+```
+./print-worksheet.py 'worksheet.html?sheet=preterite&blanks=24&seed=practice-1'
+./print-worksheet.py 'worksheet.html?sheet=vocabulary&doc=reference'
+./print-story.py examples/past-tenses.json
+```
+
+Pass any `worksheet.html` URL or query string from the site. Omit the URL for a
+new default worksheet; omit `seed` for new questions each time. PDFs go into
+gitignored `printing/` (the filename identifies the sheet, document type, seed,
+and URL options). Add `--print` to send the PDF to the default printer via `lp`.
+The script serves the page locally during export, so `./serve.sh` need not be
+running. For interactive practice instead, run `./serve.sh` and open a study
+page in your browser. For an agent-written story worksheet, ask Pi to make a
+printable past-tense quiz, or supply your own JSON following
+`examples/past-tenses.json`: each question has `text` with `___` blanks and an
+`answers` array in the same order. `./print-story.py printing/my-quiz.json`
+produces an HTML preview and PDF in `printing/`, with the key on a separate
+page. Use `--no-key` to leave it out; `--print` is opt-in for a physical copy.
+Netlify uses `build-site.sh` to copy only the site HTML, runtime CSS, JS, and
+sheet data into ignored `dist/`, its configured publish directory. Run
+`./build-site.sh` and inspect `dist/` before deployment. Never upload the whole
+working directory: Git ignores `printing/`, but a manual upload might include
+it. The GitHub repository itself is public, so don't commit private material,
+including quiz responses or generated exercises. `./serve.sh` binds to
+localhost for local practice.
+
+Run `python3 -m unittest discover -s tests -p 'test_print*.py'` to check PDF
+export (requires Chromium; it never sends a real print job).
