@@ -221,10 +221,29 @@ A new story uses fresh, tool-free Pi sessions: Luna plans an outline from
 seed-selected scenarios, complications, and opening styles; Sol writes the quiz
 and a separate Sol session reviews it. The seed does not require a time or weather opening;
 `--theme childhood` selects only childhood scenarios. Each plain `make` picks a
-new random seed and makes a new story; a seed chooses the ingredients and
-worksheet questions, not the exact wording of an LLM regeneration. The outline
-and quiz are saved in `printing/`; `make --seed <previous-seed>` reuses the saved
-outline and calls only Sol. `make --reuse` keeps the previous seed and quiz with
+new random seed and makes a new story. Automatic runs use local history to
+choose an unused scenario first, then the least recently used scenario. With
+the current catalog, all 15 scenarios are used before one repeats (five for
+`--theme childhood`, with use shared across themes). Complications and openings
+rotate independently in the same way; the seed breaks ties reproducibly.
+Luna also sees the last five outlines and is asked to vary their central events
+and resolutions. Scenario spacing is enforced by code; plot similarity across
+different scenarios still depends on the model.
+
+The last 100 generated ingredient sets and outlines are kept locally in
+gitignored `printing/story-variety-history.json`, independently of the quiz
+lookup archive. On the first run, the existing `current-outline.json` seeds
+this history, so the current scenario is avoided immediately. Earlier quizzes
+cannot be reliably backfilled because their scenario metadata was not saved.
+New entries are recorded after the quiz passes review, even if a later PDF
+export fails. Failed generation does not add a new scenario to history.
+
+An explicit `make --seed TEXT` reuses ingredients and an outline from history
+when available. Otherwise it uses the original seed-only selection, bypassing
+repeat avoidance so explicit seeds stay reproducible. A seed chooses ingredients
+and worksheet questions, not the exact wording of an LLM regeneration. The latest
+outline and quiz are saved in `printing/`; `make --seed <previous-seed>` reuses
+the saved outline and calls only Sol. `make --reuse` keeps the previous seed and quiz with
 **no model call**. New generations report each stage's token usage and Pi's
 catalog-based cost estimate in `printing/current-story-usage.json` and the
 review result in `printing/current-story-review.json`. This is not necessarily
@@ -251,7 +270,10 @@ running. For interactive practice instead, run `./serve.sh` and open a study
 page in your browser. For an agent-written story worksheet, ask Pi to make a
 printable past-tense quiz, or supply your own JSON following
 `examples/past-tenses.json`: each question has `text` with `___` blanks and an
-`answers` array in the same order. `./print-story.py printing/my-quiz.json`
+`answers` array in the same order. New quizzes include an `explanations` array
+with one brief English reason per answer, naming the tense and explaining why
+it fits the story. These appear beside the answers on the key page; older JSON
+without explanations still works. `./print-story.py printing/my-quiz.json`
 produces an HTML preview and PDF in `printing/`, with the key on a separate
 page. Each story quiz also gets a short lookup key on the worksheet and, when
 included, the answer page. `--no-key` omits the answer page. The archive keeps the 15

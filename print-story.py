@@ -24,6 +24,12 @@ def render(quiz, story_key, include_key):
         prompt = BLANK.join(escape(part) for part in question["text"].split("___"))
         questions.append(f'<li class="story-item"><span class="story-num">{number}.</span><span>{prompt}</span></li>')
         forms = " / ".join(escape(answer) for answer in question["answers"])
+        if question.get("explanations"):
+            forms = "".join(
+                f'<span class="story-answer">{escape(answer)}'
+                f'<span class="story-note" lang="en">{escape(explanation)}</span></span>'
+                for answer, explanation in zip(question["answers"], question["explanations"])
+            )
         note = f'<span class="story-note">{escape(question["note"])}</span>' if question.get("note") else ""
         answers.append(f'<li class="story-item"><span class="story-num">{number}.</span><span>{forms}{note}</span></li>')
 

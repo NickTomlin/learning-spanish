@@ -7,15 +7,17 @@ import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { storyIngredients } from "./story-prompts.mjs";
 import { reviewIssues } from "./story-review.mjs";
+import { loadStoryHistory, recordStoryHistory } from "./story-history.mjs";
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const PRINTING = join(ROOT, "printing");
 const STORY = join(PRINTING, "current-story.json");
 const OUTLINE = join(PRINTING, "current-outline.json");
+const HISTORY = join(PRINTING, "story-variety-history.json");
 const STORY_USAGE = join(PRINTING, "current-story-usage.json");
 const STORY_REVIEW = join(PRINTING, "current-story-review.json");
 const MANIFEST = join(PRINTING, "current-run.json");
-const PROMPTER_MODEL = "openai-codex/gpt-5.6-luna";
+const PROMPTER_MODEL = "openai-codex/gpt-6-luna";
 const TEACHER_MODEL = "openai-codex/gpt-6-sol";
 const exec = promisify(execFile);
 
@@ -87,19 +89,30 @@ async function askPi(modelRuntime, modelName, systemPrompt, prompt) {
   }
 }
 
-async function generateStory(seed, theme) {
+async function generateStory(seed, theme, explicitSeed) {
   const { ModelRuntime } = await import("@earendil-works/pi-coding-agent");
   const modelRuntime = await ModelRuntime.create();
   const saved = await readFile(OUTLINE, "utf8").then(JSON.parse).catch(() => null);
-  const chosenTheme = theme || (saved?.ingredients?.seed === seed ? saved.ingredients.theme : "any");
-  const ingredients = storyIngredients(seed, chosenTheme);
+  const history = await loadStoryHistory(HISTORY, OUTLINE);
+  const chosenTheme = theme || (saved?.ingredients?.seed === seed ? saved.ingredients.theme :
+    [...history].reverse().find((entry) => entry.ingredients.seed === seed)?.ingredients.theme) || "any";
+  const previousEntry = [...history].reverse().find((entry) =>
+    entry.ingredients.seed === seed && entry.ingredients.theme === chosenTheme);
+  const ingredients = previousEntry?.ingredients ||
+    (saved?.ingredients?.seed === seed && saved.ingredients.theme === chosenTheme ? saved.ingredients :
+      storyIngredients(seed, chosenTheme, explicitSeed ? null : history));
   console.log(`Story seed: ${seed}\nScenario: ${ingredients.scenario}`);
-  let outline = JSON.stringify(saved?.ingredients) === JSON.stringify(ingredients) ? saved.outline : null;
+  let outline = JSON.stringify(saved?.ingredients) === JSON.stringify(ingredients)
+    ? saved.outline : previousEntry?.outline;
+  if (!(await exists(HISTORY)) && history.length) {
+    const previous = history.at(-1);
+    await recordStoryHistory(HISTORY, history, previous.ingredients, previous.outline);
+  }
   const stages = {};
   if (!outline) {
     const planned = await askPi(modelRuntime, PROMPTER_MODEL,
       "You plan varied Spanish-learning stories. Return only valid JSON, without Markdown.",
-      `Write a short story OUTLINE in English from these ingredients: ${JSON.stringify(ingredients)}. Return {"title":"...","beats":["...", "...", "...", "...", "..."]} with five concrete chronological events and an ending. Honor the scenario, complication and opening approach. Keep ownership and chronology consistent, resolve the central problem, and do not repeat the same event as a new beat. A clock time, time of day or weather is NOT required; mention one only if the plot needs it. Vary the plot; avoid defaulting to rain, lost keys, or a package. Do not write quiz blanks or verb answers.`);
+      `Write a short story OUTLINE in English from these ingredients: ${JSON.stringify(ingredients)}. Return {"title":"...","beats":["...", "...", "...", "...", "..."]} with five concrete chronological events and an ending. Honor the scenario, complication and opening approach. Keep ownership and chronology consistent, resolve the central problem, and do not repeat the same event as a new beat. A clock time, time of day or weather is NOT required; mention one only if the plot needs it. Vary the plot; avoid defaulting to rain, lost keys, or a package. Recent stories, oldest first: ${JSON.stringify(history.slice(-5).map(({ ingredients, outline }) => ({ scenario: ingredients.scenario, ...outline })))}. Use different central events, mistakes, discoveries, and resolutions from these recent stories; changing only names or locations is not enough. Do not write quiz blanks or verb answers.`);
     outline = planned.value;
     stages.prompter = planned.usage;
   } else console.log("Reusing saved outline; no prompter call.");
@@ -111,7 +124,7 @@ async function generateStory(seed, theme) {
   const skill = await readFile(join(ROOT, ".agents/skills/practice-spanish-past-tenses/SKILL.md"), "utf8");
   const taught = await askPi(modelRuntime, TEACHER_MODEL,
     "You are a Spanish teacher writing a printable preterite/imperfect exercise. Return only valid JSON, without Markdown.",
-    `Turn this outline into one coherent intermediate-level past-tense story quiz: ${JSON.stringify(outline)}. Follow the skill guidance below, especially tense contrasts and printable format. Preserve the outline's distinctive events, opening approach and resolution without narrating the same event twice. Do not begin with a generic clock time, time of day, or weather unless the plot requires it. Every blank answer MUST be simple preterite (pretérito indefinido) or imperfect; never compound tenses such as había movido, present, future, or subjunctive. Rewrite an earlier event if necessary so its blank takes one of the two target tenses. Return {"title":"...","instructions":"...","questions":[{"text":"___ (infinitive) ...","answers":["conjugated form"],"note":"optional viewpoint explanation"}]} with 6–10 chronological questions, one or two ___ blanks in each, one answer per blank, and at least one nuanced case with a note. Do not include numbering in question text.\n\n${skill}`);
+    `Turn this outline into one coherent intermediate-level past-tense story quiz: ${JSON.stringify(outline)}. Follow the skill guidance below, especially tense contrasts and printable format. Preserve the outline's distinctive events, opening approach and resolution without narrating the same event twice. Do not begin with a generic clock time, time of day, or weather unless the plot requires it. Every blank answer MUST be simple preterite (pretérito indefinido) or imperfect; never compound tenses such as había movido, present, future, or subjunctive. Rewrite an earlier event if necessary so its blank takes one of the two target tenses. Return {"title":"...","instructions":"...","questions":[{"text":"___ (infinitive) ...","answers":["conjugated form"],"explanations":["Brief English reason for this tense in the story."],"note":"optional viewpoint explanation"}]} with 6–10 chronological questions, one or two ___ blanks in each, one answer per blank and one brief English explanation per answer in matching blank order. Each explanation must name the tense and tie its choice to the story context (for example, an ongoing action or a completed event); do not just translate the verb. Include at least one nuanced case with a note. Do not include numbering in question text.\n\n${skill}`);
   let story = taught.value;
   stages.teacher = taught.usage;
   const checks = [];
@@ -124,7 +137,7 @@ async function generateStory(seed, theme) {
   async function review(candidate, stage) {
     const result = await askPi(modelRuntime, TEACHER_MODEL,
       "You independently review Spanish teaching materials. Return only valid JSON, without Markdown.",
-      `Check this preterite/imperfect worksheet and answer key against the story outline. Check every conjugation, tense choice, subject, accent, idiom, chronology, and whether the answer actually fills its blank. Treat justified viewpoint alternatives as acceptable. Find concrete errors, not stylistic preferences. Outline: ${JSON.stringify(outline)}\nWorksheet: ${JSON.stringify(candidate)}\nReturn exactly {"pass":true,"issues":[]} if correct; otherwise {"pass":false,"issues":["Question N: specific problem and suggested fix",...]}. Never claim a pass if an answer is wrong.`);
+      `Check this preterite/imperfect worksheet and answer key against the story outline. Check every conjugation, tense choice, subject, accent, idiom, chronology, and whether the answer actually fills its blank. Check that every answer has a brief, accurate English explanation in the explanations array, in blank order, naming its tense and explaining the story context. Treat justified viewpoint alternatives as acceptable. Find concrete errors, not stylistic preferences. Outline: ${JSON.stringify(outline)}\nWorksheet: ${JSON.stringify(candidate)}\nReturn exactly {"pass":true,"issues":[]} if correct; otherwise {"pass":false,"issues":["Question N: specific problem and suggested fix",...]}. Never claim a pass if an answer is wrong.`);
     stages[stage] = result.usage;
     const issues = reviewIssues(result.value, candidate);
     checks.push({ stage, issues });
@@ -137,7 +150,7 @@ async function generateStory(seed, theme) {
     console.log(`Reviewer found ${issues.length} issue(s); asking Sol for one correction.`);
     const corrected = await askPi(modelRuntime, TEACHER_MODEL,
       "You correct Spanish worksheets. Return only the complete corrected JSON quiz, without Markdown.",
-      `Correct these specific issues: ${JSON.stringify(issues)}\nOriginal outline: ${JSON.stringify(outline)}\nDraft quiz: ${JSON.stringify(story)}\nPreserve the story and existing correct answers. Fix grammar and continuity. Every blank must take simple preterite or imperfect, never a compound tense. Return the full quiz JSON with title, instructions, and questions, each with text and answers.`);
+      `Correct these specific issues: ${JSON.stringify(issues)}\nOriginal outline: ${JSON.stringify(outline)}\nDraft quiz: ${JSON.stringify(story)}\nPreserve the story and existing correct answers. Fix grammar and continuity. Every blank must take simple preterite or imperfect, never a compound tense. Return the full quiz JSON with title, instructions, and questions, each with text, answers, and explanations (one brief English explanation per answer in blank order). Update explanations when answers change, naming the tense and explaining why it fits the story. Preserve any viewpoint notes.`);
     story = corrected.value;
     stages.correction = corrected.usage;
     await saveChecks();
@@ -146,6 +159,7 @@ async function generateStory(seed, theme) {
   if (issues.length) throw new Error(`Story review failed; nothing will print. See ${STORY_REVIEW}`);
   console.log("Story passed independent review.");
   await writeFile(STORY, JSON.stringify(story, null, 2) + "\n");
+  await recordStoryHistory(HISTORY, history, ingredients, outline);
 }
 
 function pdfFrom(output) {
@@ -175,7 +189,7 @@ async function make(options) {
     await rm(STORY_USAGE, { force: true });
     await rm(STORY_REVIEW, { force: true });
     console.log(`Outline: ${PROMPTER_MODEL} if needed; quiz: ${TEACHER_MODEL}...`);
-    await generateStory(seed, options.theme);
+    await generateStory(seed, options.theme, Boolean(options.seed));
   }
 
   const pdfs = [];

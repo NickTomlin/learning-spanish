@@ -31,6 +31,11 @@ def validate_quiz(quiz):
             raise ValueError(f"question {number} needs one answer per ___ blank")
         if any(not isinstance(answer, str) or not answer.strip() for answer in answers):
             raise ValueError(f"question {number} has an empty answer")
+        if "explanations" in question:
+            explanations = question["explanations"]
+            if (not isinstance(explanations, list) or len(explanations) != len(answers)
+                    or any(not isinstance(text, str) or not text.strip() for text in explanations)):
+                raise ValueError(f"question {number} needs one nonempty explanation per answer")
         if "note" in question and not isinstance(question["note"], str):
             raise ValueError(f"question {number} note must be text")
     if "instructions" in quiz and not isinstance(quiz["instructions"], str):
