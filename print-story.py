@@ -3,41 +3,19 @@
 
 import argparse
 from html import escape
-import json
 from pathlib import Path
 import shutil
 from string import Template
 import subprocess
 import tempfile
+from story_archive import load_quiz, save_quiz
 
 
 ROOT = Path(__file__).resolve().parent
 BLANK = '<span class="story-blank">&nbsp;</span>'
 
 
-def load_quiz(path):
-    quiz = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(quiz, dict) or not isinstance(quiz.get("title"), str) or not quiz["title"].strip():
-        raise ValueError("title must be nonempty text")
-    questions = quiz.get("questions")
-    if not isinstance(questions, list) or not questions:
-        raise ValueError("questions must be a nonempty list")
-    for number, question in enumerate(questions, 1):
-        if not isinstance(question, dict) or not isinstance(question.get("text"), str):
-            raise ValueError(f"question {number} needs text")
-        answers = question.get("answers")
-        if not isinstance(answers, list) or len(answers) != question["text"].count("___") or not answers:
-            raise ValueError(f"question {number} needs one answer per ___ blank")
-        if any(not isinstance(answer, str) or not answer.strip() for answer in answers):
-            raise ValueError(f"question {number} has an empty answer")
-        if "note" in question and not isinstance(question["note"], str):
-            raise ValueError(f"question {number} note must be text")
-    if "instructions" in quiz and not isinstance(quiz["instructions"], str):
-        raise ValueError("instructions must be text")
-    return quiz
-
-
-def render(quiz, include_key):
+def render(quiz, story_key, include_key):
     title = escape(quiz["title"])
     instructions = escape(quiz.get("instructions", "Fill in each blank with the correct form."))
     questions = []
@@ -53,13 +31,14 @@ def render(quiz, include_key):
     if include_key:
         key = f'''<section class="paper answer-key">
     <div class="paper-head"><div><p class="paper-kicker">Answer key</p><h1 class="paper-title">{title}</h1></div></div>
-    <div class="paper-meta"><div class="paper-instructions">Answers in blank order.</div></div>
+    <div class="paper-meta"><div class="paper-instructions">Answers in blank order.<br>Story key: {escape(story_key)}</div></div>
     <ol class="story-answers">{"".join(answers)}</ol>
     <div class="paper-foot"><span>{len(questions)} questions</span><span>{title} — answer key</span></div>
   </section>'''
     template = Template((ROOT / "templates/story-worksheet.html").read_text(encoding="utf-8"))
     return template.substitute(title=title, instructions=instructions,
-                               questions="".join(questions), answer_key=key, count=len(questions))
+                               questions="".join(questions), answer_key=key,
+                               story_key=escape(story_key), count=len(questions))
 
 
 def main():
@@ -69,15 +48,19 @@ def main():
     parser.add_argument("--print", action="store_true", help="send the PDF to the default printer with lp")
     args = parser.parse_args()
 
+    try:
+        quiz = load_quiz(args.quiz)
+        key = save_quiz(quiz)
+    except (OSError, ValueError) as error:
+        parser.error(str(error))
+    print(f"Story key: {key}", flush=True)
+
     chromium = shutil.which("chromium") or shutil.which("chromium-browser") or shutil.which("google-chrome")
     if not chromium:
         parser.error("Chromium or Google Chrome is required to generate a PDF")
     if args.print and not shutil.which("lp"):
         parser.error("lp is required for --print")
-    try:
-        html = render(load_quiz(args.quiz), not args.no_key)
-    except (OSError, ValueError) as error:
-        parser.error(str(error))
+    html = render(quiz, key, not args.no_key)
 
     output = ROOT / "printing"
     output.mkdir(exist_ok=True)

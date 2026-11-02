@@ -29,7 +29,20 @@ Avoid treating signal words such as *mientras*, *siempre*, *de repente*, or *por
 
 ## Conduct the interaction
 
-Present only the story and brief answer instructions first. Invite compact answers such as `1. miraba / sonó`.
+Before showing a new quiz, create `printing/` if needed and write its complete
+JSON to `printing/story-quiz.json`, following `examples/past-tenses.json` even
+for conversational quizzes: each question has `text` with `___` blanks and an
+`answers` array in blank order. Keep any explanatory `note` in the saved JSON.
+Then run from the repository root:
+
+```sh
+python3 story_archive.py save printing/story-quiz.json
+```
+
+Include the returned `Story key: XXXXXXXX` with the quiz so the learner can ask
+for an explanation later. Present only the story and brief answer instructions;
+do not reveal answer arrays or notes. Invite compact answers such as
+`1. miraba / sonó`.
 
 After the learner responds:
 
@@ -56,3 +69,6 @@ If the learner asks for a “short” quiz without specifying length, use 8 blan
 If the learner asks for a PDF of a story quiz, write the story and answer key as JSON in the repository's gitignored `printing/` directory. Follow `examples/past-tenses.json`: a `title`, `instructions`, and a `questions` list whose entries have `text` with `___` for each blank and an `answers` array in blank order. Include a `note` on an item when an alternate tense changes the viewpoint. Do not put item numbers in `text`; the template supplies them. Check that every blank has an answer, and keep the story short enough to fit on one page if a double-sided answer key is wanted.
 
 Run `./print-story.py printing/<name>.json` from the repository root. This produces matching HTML (for preview) and PDF in `printing/`, using the site's print styles; the answer key follows on a separate page. Use `--no-key` if requested. Only add `--print` if the learner explicitly wants the PDF sent to the default physical printer. Show the learner the PDF path; never print automatically just because they asked for a PDF.
+
+The print script archives a valid quiz and includes its lookup key on the
+worksheet and answer page. Give the learner the key with the PDF path.
