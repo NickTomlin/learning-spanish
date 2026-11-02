@@ -49,14 +49,23 @@ function pick(seed, label, choices) {
   return choices[bytes.readUInt32BE(0) % choices.length];
 }
 
-export function storyIngredients(seed, theme = "any") {
+function leastRecent(seed, label, choices, history) {
+  const lastUsed = choices.map((choice) => history.findLastIndex((entry) => entry.ingredients[label] === choice));
+  const oldest = Math.min(...lastUsed);
+  return pick(seed, label, choices.filter((_, index) => lastUsed[index] === oldest));
+}
+
+export function storyIngredients(seed, theme = "any", history = null) {
   if (theme !== "any" && theme !== "childhood") throw new Error(`Unknown theme: ${theme}`);
   const childhood = theme === "childhood";
+  const choose = (label, choices) => history === null
+    ? pick(seed, label, choices)
+    : leastRecent(seed, label, choices, history);
   return {
     seed,
     theme,
-    scenario: pick(seed, "scenario", childhood ? CHILDHOOD_SCENARIOS : [...SCENARIOS, ...CHILDHOOD_SCENARIOS]),
-    complication: pick(seed, "complication", COMPLICATIONS),
-    opening: pick(seed, "opening", childhood ? CHILDHOOD_OPENINGS : OPENINGS),
+    scenario: choose("scenario", childhood ? CHILDHOOD_SCENARIOS : [...SCENARIOS, ...CHILDHOOD_SCENARIOS]),
+    complication: choose("complication", COMPLICATIONS),
+    opening: choose("opening", childhood ? CHILDHOOD_OPENINGS : OPENINGS),
   };
 }

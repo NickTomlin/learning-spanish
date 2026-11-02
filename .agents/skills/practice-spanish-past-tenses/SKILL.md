@@ -13,7 +13,8 @@ Default to an interactive, encouraging quiz rather than giving a worksheet and a
 2. Write one coherent short story of 6–10 numbered items. Keep the plot natural, vivid, and easy to follow.
 3. Put one or two blanks in each item. Give the infinitive after every blank and include the subject when it is not obvious.
 4. Ask the learner to supply the conjugated form, or offer two conjugated choices when they request multiple choice.
-5. Mix regular and common irregular verbs. Do not make vocabulary difficulty the main obstacle.
+5. Save an `explanations` array alongside `answers`, with one brief English explanation per answer in matching blank order. Name the tense and explain why it fits the story context; do not merely translate the verb. Keep each explanation to one short sentence.
+6. Mix regular and common irregular verbs. Do not make vocabulary difficulty the main obstacle.
 
 Include a balanced selection of contrasts:
 
@@ -41,7 +42,7 @@ python3 story_archive.py save printing/story-quiz.json
 
 Include the returned `Story key: XXXXXXXX` with the quiz so the learner can ask
 for an explanation later. Present only the story and brief answer instructions;
-do not reveal answer arrays or notes. Invite compact answers such as
+do not reveal answer arrays, explanations, or notes. Invite compact answers such as
 `1. miraba / sonó`.
 
 After the learner responds:
@@ -66,7 +67,7 @@ If the learner asks for a “short” quiz without specifying length, use 8 blan
 
 ## Printable version
 
-If the learner asks for a PDF of a story quiz, write the story and answer key as JSON in the repository's gitignored `printing/` directory. Follow `examples/past-tenses.json`: a `title`, `instructions`, and a `questions` list whose entries have `text` with `___` for each blank and an `answers` array in blank order. Include a `note` on an item when an alternate tense changes the viewpoint. Do not put item numbers in `text`; the template supplies them. Check that every blank has an answer, and keep the story short enough to fit on one page if a double-sided answer key is wanted.
+If the learner asks for a PDF of a story quiz, write the story and answer key as JSON in the repository's gitignored `printing/` directory. Follow `examples/past-tenses.json`: a `title`, `instructions`, and a `questions` list whose entries have `text` with `___` for each blank and an `answers` array in blank order. Include an `explanations` array with one brief English sentence per answer in the same order, naming the tense and tying it to the story context. Explanations appear only on the answer key. Include a `note` on an item when an alternate tense changes the viewpoint. Do not put item numbers in `text`; the template supplies them. Check that every blank has an answer, and keep the story short enough to fit on one page if a double-sided answer key is wanted.
 
 Run `./print-story.py printing/<name>.json` from the repository root. This produces matching HTML (for preview) and PDF in `printing/`, using the site's print styles; the answer key follows on a separate page. Use `--no-key` if requested. Only add `--print` if the learner explicitly wants the PDF sent to the default physical printer. Show the learner the PDF path; never print automatically just because they asked for a PDF.
 

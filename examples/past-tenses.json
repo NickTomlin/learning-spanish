@@ -2,13 +2,86 @@
   "title": "Una noche en la biblioteca",
   "instructions": "Completa cada espacio con el pretérito o el imperfecto del verbo entre paréntesis.",
   "questions": [
-    { "text": "___ (ser) las ocho y la plaza ___ (estar) casi vacía.", "answers": ["Eran", "estaba"] },
-    { "text": "Todos los viernes, Lucía ___ (ir) a la biblioteca después del trabajo.", "answers": ["iba"] },
-    { "text": "Aquella noche, Lucía ___ (caminar) hacia la entrada cuando ___ (oír) un golpe.", "answers": ["caminaba", "oyó"] },
-    { "text": "Junto a la puerta, un hombre ___ (buscar) algo debajo de un banco.", "answers": ["buscaba"] },
-    { "text": "Lucía ___ (acercarse) para ayudarlo, pero él ___ (ponerse) rojo de vergüenza.", "answers": ["se acercó", "se puso"] },
-    { "text": "El hombre le ___ (decir) que ___ (creer) que había perdido las llaves de la biblioteca.", "answers": ["dijo", "creía"] },
-    { "text": "Lucía las ___ (encontrar) debajo del banco y se las dio.", "answers": ["encontró"] },
-    { "text": "De camino a casa, Lucía ___ (pensar) en aquel encuentro.", "answers": ["pensaba"], "note": "Pensó también sería posible si se presenta el trayecto como un episodio completo." }
+    {
+      "text": "___ (ser) las ocho y la plaza ___ (estar) casi vacía.",
+      "answers": [
+        "Eran",
+        "estaba"
+      ],
+      "explanations": [
+        "Imperfect: telling the time sets the scene.",
+        "Imperfect: the nearly empty square is background description."
+      ]
+    },
+    {
+      "text": "Todos los viernes, Lucía ___ (ir) a la biblioteca después del trabajo.",
+      "answers": [
+        "iba"
+      ],
+      "explanations": [
+        "Imperfect: going to the library was her regular Friday habit."
+      ]
+    },
+    {
+      "text": "Aquella noche, Lucía ___ (caminar) hacia la entrada cuando ___ (oír) un golpe.",
+      "answers": [
+        "caminaba",
+        "oyó"
+      ],
+      "explanations": [
+        "Imperfect: she was already walking when the noise interrupted her.",
+        "Preterite: hearing the bang is the event that interrupts her walk."
+      ]
+    },
+    {
+      "text": "Junto a la puerta, un hombre ___ (buscar) algo debajo de un banco.",
+      "answers": [
+        "buscaba"
+      ],
+      "explanations": [
+        "Imperfect: his search was already in progress when she noticed him."
+      ]
+    },
+    {
+      "text": "Lucía ___ (acercarse) para ayudarlo, pero él ___ (ponerse) rojo de vergüenza.",
+      "answers": [
+        "se acercó",
+        "se puso"
+      ],
+      "explanations": [
+        "Preterite: approaching him is a completed action that moves the story forward.",
+        "Preterite: turning red marks the onset of his embarrassment."
+      ]
+    },
+    {
+      "text": "El hombre le ___ (decir) que ___ (creer) que había perdido las llaves de la biblioteca.",
+      "answers": [
+        "dijo",
+        "creía"
+      ],
+      "explanations": [
+        "Preterite: he tells her what happened in a single completed exchange.",
+        "Imperfect: his belief is an ongoing mental state at that moment."
+      ]
+    },
+    {
+      "text": "Lucía las ___ (encontrar) debajo del banco y se las dio.",
+      "answers": [
+        "encontró"
+      ],
+      "explanations": [
+        "Preterite: finding the keys is the completed event that resolves the problem."
+      ]
+    },
+    {
+      "text": "De camino a casa, Lucía ___ (pensar) en aquel encuentro.",
+      "answers": [
+        "pensaba"
+      ],
+      "note": "Pensó (preterite) would also work if her thinking during the walk is viewed as a complete episode.",
+      "explanations": [
+        "Imperfect: her thoughts are presented as ongoing during the walk home."
+      ]
+    }
   ]
 }

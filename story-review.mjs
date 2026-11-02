@@ -14,6 +14,10 @@ export function reviewIssues(verdict, story) {
       issues.push(`Question ${index + 1}: missing answers`);
       continue;
     }
+    if (!Array.isArray(question.explanations) || question.explanations.length !== question.answers.length ||
+        question.explanations.some((text) => typeof text !== "string" || !text.trim())) {
+      issues.push(`Question ${index + 1}: include one brief English explanation per answer in blank order`);
+    }
     for (const answer of question.answers) {
       if (/\bhab(?:ía|ías|íamos|íais|ían)\s+\p{L}+/iu.test(answer)) {
         issues.push(`Question ${index + 1}: compound tense ${answer}; use only preterite or imperfect`);
